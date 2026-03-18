@@ -4,7 +4,7 @@
 // All UI components for the Lechu Scheduler
 // ============================================
 
-const VERSION = 'v2.3.1';
+const VERSION = 'v2.3.2';
 
 const VersionBadge = ({ className = '' }) => (
     <span className={`text-xs text-gray-500 ${className}`}>{VERSION}</span>
@@ -635,24 +635,6 @@ const AdminTab = ({
                             {backupBusy ? 'מעבד...' : 'ייצא גיבוי'}
                         </button>
                     </div>
-
-           <div className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">
-                    ניהול <VersionBadge className="mr-2" />
-                </h2>
-                <button
-                    onClick={updateBackend}
-                    disabled={updatingBackend}
-                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 font-semibold"
-                >
-                    {updatingBackend ? 'Updating...' : 'Download Latest Version'}
-                </button>
-                <div className="text-xs text-gray-500 mt-2">
-                    Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
-                </div>
-            </div>
-
-
                     <div className="border-t border-gray-200 pt-4">
                         <h3 className="font-semibold text-gray-700 mb-2">ייבוא גיבוי</h3>
                         <p className="text-sm text-gray-600 mb-3">
@@ -678,6 +660,23 @@ const AdminTab = ({
                             </div>
                         )}
                     </div>
+
+                   <div className="bg-white rounded-lg shadow-md p-4">
+                        <h2 className="text-lg font-bold text-gray-800 mb-4">
+                            ניהול <VersionBadge className="mr-2" />
+                        </h2>
+                        <button
+                            onClick={updateBackend}
+                            disabled={updatingBackend}
+                            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 font-semibold"
+                        >
+                            {updatingBackend ? 'Updating...' : 'Download Latest Version'}
+                        </button>
+                        <div className="text-xs text-gray-500 mt-2">
+                            Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
