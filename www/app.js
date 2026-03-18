@@ -126,6 +126,18 @@ const App = () => {
         }
     };
 
+    const loadDeviceTime = async () => {
+        try {
+            const response = await fetch('/api/time');
+            if (response.ok) {
+                const data = await response.json();
+                setDeviceTime(data.local_formatted || data.local || '');
+            }
+        } catch (error) {
+            console.error('Error loading device time:', error);
+        }
+    };
+
     const exportBackup = async () => {
         try {
             setBackupBusy(true);
