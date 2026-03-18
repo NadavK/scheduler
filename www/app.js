@@ -599,7 +599,7 @@ const updateOutputName = (gpio, name) => {
                                 <button onClick={() => setFilterEnabled('enabled')}
                                     className={`px-2 py-1 rounded text-xs font-semibold ${filterEnabled === 'enabled' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>מופעל</button>
                                 <button onClick={() => setFilterEnabled('disabled')}
-                                    className={`px-2 py-1 rounded text-xs font-semibold ${filterEnabled === 'disabled' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>כבוי</button>
+                                    className={`px-2 py-1 rounded text-xs font-semibold ${filterEnabled === 'disabled' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>מושבת</button>
                             </div>
                         </div>
                     </div>
