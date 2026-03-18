@@ -30,7 +30,7 @@ from flask_sqlalchemy import SQLAlchemy
 from gpiozero import LED
 from werkzeug.security import generate_password_hash, check_password_hash
 
-VERSION = "2.3.0"
+VERSION = "2.3.3"
 local_tz = ZoneInfo("Asia/Jerusalem")
 
 app = Flask(__name__)
@@ -282,7 +282,7 @@ def reschedule_sunset_job(schedule: ScheduleModel, target_time):
             func=set_gpio,
             trigger='date',
             run_date=target_time,
-            args=[schedule.gpio, state, True, schedule.id],
+            args=[schedule.gpio, state, True, schedule.id, 'scheduled'],
             id=job_id,
             name=f"{schedule.description()} (per sunset: {target_time.strftime('%H:%M')}) ({job_id})",
             replace_existing=True,
@@ -636,7 +636,7 @@ def schedule_job(schedule: ScheduleModel):
         scheduler.add_job(
             func=set_gpio,
             trigger=trigger,
-            args=[schedule.gpio, state, True, schedule.id],  # Pass schedule_id for logging
+            args=[schedule.gpio, state, True, schedule.id, 'scheduled'],  # Pass schedule_id for logging
             id=job_id,
             name=schedule.description() + f' ({job_id})',
             replace_existing=True,
