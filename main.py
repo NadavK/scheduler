@@ -8,6 +8,7 @@ import logging
 import os
 import shutil
 import subprocess
+import tempfile
 import threading
 import time
 from collections import defaultdict
@@ -29,7 +30,7 @@ from flask_sqlalchemy import SQLAlchemy
 from gpiozero import LED
 from werkzeug.security import generate_password_hash, check_password_hash
 
-VERSION = "2.2.1"
+VERSION = "2.3.0"
 local_tz = ZoneInfo("Asia/Jerusalem")
 
 app = Flask(__name__)
@@ -1505,6 +1506,78 @@ def change_password(username):
         logger.error(f"Error changing password: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/admin/update-backend', methods=['POST'])
+@require_admin
+def update_backend():
+    """Backup current source files, download latest release source, and replace files."""
+    try:
+        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_dir = DATA_DIR / f'sources_backup_{ts}'
+        backup_www_dir = backup_dir / 'www'
+        backup_dir.mkdir(parents=True, exist_ok=True)
+
+        # Backup existing files
+        shutil.copy2(DATA_DIR / 'main.py', backup_dir / 'main.py')
+        shutil.copytree(DATA_DIR / 'www', backup_www_dir)
+        logger.info("Backed up current source to %s", backup_dir)
+
+        zip_path = DATA_DIR / 'scheduler.zip'
+        extract_dir = Path(tempfile.mkdtemp(prefix='scheduler_sources_', dir=str(DATA_DIR)))
+
+        try:
+            # Download latest source
+            subprocess.run(['wget', '-O', str(zip_path), 'https://github.com/NadavK/scheduler/archive/refs/heads/main.zip'], check=True)
+
+            # Unzip
+            subprocess.run(['unzip', '-o', str(zip_path), '-d', str(extract_dir)], check=True)
+
+            extracted_root = extract_dir / 'scheduler-main'
+            new_main = extracted_root / 'main.py'
+            new_www = extracted_root / 'www'
+
+            if not new_main.exists():
+                raise FileNotFoundError("Downloaded package does not contain main.py")
+            if not new_www.exists():
+                raise FileNotFoundError("Downloaded package does not contain www/")
+
+            # Replace source files
+            shutil.copy2(new_main, DATA_DIR / 'main.py')
+
+            target_www = DATA_DIR / 'www'
+            shutil.rmtree(target_www)
+            shutil.copytree(new_www, target_www)
+
+            logger.info("Backend updated successfully from GitHub")
+
+            # Restart service
+            restart_result = subprocess.run(['sudo', 'service', 'scheduler', 'restart'], capture_output=True, text=True)
+
+            if restart_result.returncode != 0:
+                logger.error("Service restart failed: %s", restart_result.stderr)
+                return jsonify({
+                    'success': True,
+                    'backup_dir': str(backup_dir),
+                    'message': 'Backend updated, but service restart failed.',
+                    'restart_error': restart_result.stderr
+                }), 500
+
+            return jsonify({
+                'success': True,
+                'backup_dir': str(backup_dir),
+                'message': 'Backend source updated successfully. Restart the service to use the new version.'
+            })
+
+        finally:
+            if zip_path.exists():
+                zip_path.unlink(missing_ok=True)
+            shutil.rmtree(extract_dir, ignore_errors=True)
+
+    except Exception as e:
+        logger.error(f"Error updating backend: {e}")
+        return jsonify({'error': str(e)}), 500
+
 
 # Static file serving
 @app.route('/')

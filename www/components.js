@@ -4,6 +4,12 @@
 // All UI components for the Lechu Scheduler
 // ============================================
 
+const VERSION = 'v2.3.0';
+
+const VersionBadge = ({ className = '' }) => (
+    <span className={`text-xs text-gray-500 ${className}`}>{VERSION}</span>
+);
+
 // Login Screen Component
 const LoginScreen = ({ username, setUsername, password, setPassword, loginError, loggingIn, handleLogin }) => (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -39,7 +45,9 @@ const Header = ({
     <div className="bg-white rounded-lg shadow-md p-2 sm:p-3 mb-2">
         {/* Mobile Row 1 */}
         <div className="flex sm:hidden items-center justify-between mb-2">
-            <h1 className="text-lg font-bold text-gray-800">לו"ז שבועי <span className="text-xs text-gray-500">v2.2.0</span></h1>
+            <h1 className="text-lg font-bold text-gray-800">
+                לו"ז שבועי <VersionBadge />
+            </h1>
             <div className="flex items-center gap-2">
                 <button onClick={saveSchedules} disabled={saving}
                     className="px-3 py-1 bg-green-600 text-white rounded text-sm font-semibold hover:bg-green-700 disabled:bg-gray-400">
@@ -53,7 +61,7 @@ const Header = ({
         {/* Desktop + Mobile Row 2 */}
         <div className="flex flex-wrap items-center gap-2">
             <h1 className="hidden sm:block text-lg sm:text-xl font-bold text-gray-800">
-                לו"ז שבועי <span className="text-xs text-gray-500">v2.2.2</span>
+                לו"ז שבועי <VersionBadge />
             </h1>
 
             {/* Tabs */}
@@ -447,6 +455,55 @@ const AdminTab = ({
 }) => {
     const [changingPasswordFor, setChangingPasswordFor] = useState(null);
     const [newPasswordInput, setNewPasswordInput] = useState('');
+    const [updatingBackend, setUpdatingBackend] = useState(false);
+
+    const updateBackend = async () => {
+        if (!window.confirm('This will backup current source files, download the latest version, and replace main.py + www/. Continue?')) {
+            return;
+        }
+
+        try {
+            setUpdatingBackend(true);
+            const response = await fetch('/api/admin/update-backend', {
+                method: 'POST'
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`${data.message}\nBackup: ${data.backup_dir}`);
+            } else {
+                alert(data.error || 'שגיאה בעדכון ה-backend');
+            }
+        } catch (error) {
+            console.error('Error updating backend:', error);
+            alert('שגיאה בעדכון ה-backend');
+        } finally {
+            setUpdatingBackend(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4">
+            <div className="bg-white rounded-lg shadow-md p-4">
+                <h2 className="text-lg font-bold text-gray-800 mb-2">זמן המכשיר</h2>
+                <div className="text-sm text-gray-700">
+                    {deviceTime || 'טוען...'}
+                </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-4">
+                <h2 className="text-lg font-bold text-gray-800 mb-4">ניהול</h2>
+                <button
+                    onClick={updateBackend}
+                    disabled={updatingBackend}
+                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 font-semibold"
+                >
+                    {updatingBackend ? 'Updating...' : 'Download Latest Version'}
+                </button>
+                <div className="text-xs text-gray-500 mt-2">
+                    Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
+                </div>
+            </div>
 
     const handlePasswordChange = async (username) => {
         if (!newPasswordInput) {
