@@ -53,7 +53,7 @@ const Header = ({
         {/* Desktop + Mobile Row 2 */}
         <div className="flex flex-wrap items-center gap-2">
             <h1 className="hidden sm:block text-lg sm:text-xl font-bold text-gray-800">
-                לו"ז שבועי <span className="text-xs text-gray-500">v2.2.0</span>
+                לו"ז שבועי <span className="text-xs text-gray-500">v2.2.1</span>
             </h1>
 
             {/* Tabs */}
