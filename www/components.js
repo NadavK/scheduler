@@ -482,28 +482,6 @@ const AdminTab = ({
         }
     };
 
-    return (
-        <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-lg font-bold text-gray-800 mb-2">זמן המכשיר</h2>
-                <div className="text-sm text-gray-700">
-                    {deviceTime || 'טוען...'}
-                </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">ניהול</h2>
-                <button
-                    onClick={updateBackend}
-                    disabled={updatingBackend}
-                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 font-semibold"
-                >
-                    {updatingBackend ? 'Updating...' : 'Download Latest Version'}
-                </button>
-                <div className="text-xs text-gray-500 mt-2">
-                    Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
-                </div>
-            </div>
 
     const handlePasswordChange = async (username) => {
         if (!newPasswordInput) {
@@ -657,6 +635,23 @@ const AdminTab = ({
                             {backupBusy ? 'מעבד...' : 'ייצא גיבוי'}
                         </button>
                     </div>
+
+           <div className="bg-white rounded-lg shadow-md p-4">
+                <h2 className="text-lg font-bold text-gray-800 mb-4">
+                    ניהול <VersionBadge className="mr-2" />
+                </h2>
+                <button
+                    onClick={updateBackend}
+                    disabled={updatingBackend}
+                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400 font-semibold"
+                >
+                    {updatingBackend ? 'Updating...' : 'Download Latest Version'}
+                </button>
+                <div className="text-xs text-gray-500 mt-2">
+                    Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
+                </div>
+            </div>
+
 
                     <div className="border-t border-gray-200 pt-4">
                         <h3 className="font-semibold text-gray-700 mb-2">ייבוא גיבוי</h3>
