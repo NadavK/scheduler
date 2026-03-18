@@ -4,7 +4,7 @@
 // All UI components for the Lechu Scheduler
 // ============================================
 
-const VERSION = 'v2.3.0';
+const VERSION = 'v2.3.1';
 
 const VersionBadge = ({ className = '' }) => (
     <span className={`text-xs text-gray-500 ${className}`}>{VERSION}</span>
