@@ -458,7 +458,7 @@ const AdminTab = ({
     const [updatingBackend, setUpdatingBackend] = useState(false);
 
     const updateBackend = async () => {
-        if (!window.confirm('This will backup current source files, download the latest version, and replace main.py + www/. Continue?')) {
+        if (!window.confirm('This will backup current source files, download the latest version and replace them. Continue?')) {
             return;
         }
 

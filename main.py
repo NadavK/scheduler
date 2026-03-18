@@ -30,7 +30,7 @@ from flask_sqlalchemy import SQLAlchemy
 from gpiozero import LED
 from werkzeug.security import generate_password_hash, check_password_hash
 
-VERSION = "2.3.3"
+VERSION = "2.3.4"
 local_tz = ZoneInfo("Asia/Jerusalem")
 
 app = Flask(__name__)
@@ -1552,21 +1552,20 @@ def update_backend():
             logger.info("Backend updated successfully from GitHub")
 
             # Restart service
-            restart_result = subprocess.run(['sudo', 'service', 'scheduler', 'restart'], capture_output=True, text=True)
+            def restart_service_after_delay(delay_seconds: int = 5):
+                time.sleep(delay_seconds)
+                restart_result = subprocess.run(['sudo', 'service', 'scheduler', 'restart'], capture_output=True, text=True)
+                # subprocess.Popen(['bash', '-c', 'sleep 5 && sudo service scheduler restart'])
 
-            if restart_result.returncode != 0:
-                logger.error("Service restart failed: %s", restart_result.stderr)
-                return jsonify({
-                    'success': True,
-                    'backup_dir': str(backup_dir),
-                    'message': 'Backend updated, but service restart failed.',
-                    'restart_error': restart_result.stderr
-                }), 500
+                if restart_result.returncode != 0:
+                    logger.error("Service restart failed: %s", restart_result.stderr)
+
+            threading.Thread(target=restart_service_after_delay, args=(2,), daemon=True).start()
 
             return jsonify({
                 'success': True,
                 'backup_dir': str(backup_dir),
-                'message': 'Backend source updated successfully. Restart the service to use the new version.'
+                'message': 'Backend source updated successfully. Restarting service scheduled imminently.'
             })
 
         finally:
