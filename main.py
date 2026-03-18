@@ -29,7 +29,7 @@ from flask_sqlalchemy import SQLAlchemy
 from gpiozero import LED
 from werkzeug.security import generate_password_hash, check_password_hash
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 local_tz = ZoneInfo("Asia/Jerusalem")
 
 app = Flask(__name__)
