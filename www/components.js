@@ -4,7 +4,7 @@
 // All UI components for the Lechu Scheduler
 // ============================================
 
-const VERSION = 'v2.3.2';
+const VERSION = 'v2.3.3';
 
 const VersionBadge = ({ className = '' }) => (
     <span className={`text-xs text-gray-500 ${className}`}>{VERSION}</span>
@@ -662,9 +662,6 @@ const AdminTab = ({
                     </div>
 
                    <div className="bg-white rounded-lg shadow-md p-4">
-                        <h2 className="text-lg font-bold text-gray-800 mb-4">
-                            ניהול <VersionBadge className="mr-2" />
-                        </h2>
                         <button
                             onClick={updateBackend}
                             disabled={updatingBackend}
@@ -673,7 +670,7 @@ const AdminTab = ({
                             {updatingBackend ? 'Updating...' : 'Download Latest Version'}
                         </button>
                         <div className="text-xs text-gray-500 mt-2">
-                            Backs up <code>main.py</code> and <code>www/</code>, then replaces them from GitHub.
+                            Backs up sources and replaces them from GitHub.
                         </div>
                     </div>
 
