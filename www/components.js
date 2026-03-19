@@ -4,7 +4,7 @@
 // All UI components for the Lechu Scheduler
 // ============================================
 
-const VERSION = 'v2.3.3';
+const VERSION = 'v2.3.5';
 
 const VersionBadge = ({ className = '' }) => (
     <span className={`text-xs text-gray-500 ${className}`}>{VERSION}</span>
@@ -69,7 +69,7 @@ const Header = ({
                 <button onClick={() => setActiveTab('schedules')}
                     className={`px-3 py-1 text-sm font-semibold rounded transition-colors ${activeTab === 'schedules' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>לו"ז</button>
                 <button onClick={() => setActiveTab('control')}
-                    className={`px-3 py-1 text-sm font-semibold rounded transition-colors ${activeTab === 'control' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>שליטה ידנית</button>
+                    className={`px-3 py-1 text-sm font-semibold rounded transition-colors ${activeTab === 'control' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>ידנית</button>
                 <button onClick={() => setActiveTab('history')}
                     className={`px-3 py-1 text-sm font-semibold rounded transition-colors ${activeTab === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>היסטוריה</button>
                 {userRole === 'admin' && (

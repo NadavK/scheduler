@@ -30,7 +30,7 @@ from flask_sqlalchemy import SQLAlchemy
 from gpiozero import LED
 from werkzeug.security import generate_password_hash, check_password_hash
 
-VERSION = "2.3.4"
+VERSION = "2.3.5"
 local_tz = ZoneInfo("Asia/Jerusalem")
 
 app = Flask(__name__)
@@ -1565,7 +1565,7 @@ def update_backend():
             return jsonify({
                 'success': True,
                 'backup_dir': str(backup_dir),
-                'message': 'Backend source updated successfully. Restarting service scheduled imminently.'
+                'message': 'Updated successfully.'
             })
 
         finally:
